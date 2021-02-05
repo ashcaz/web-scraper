@@ -17,16 +17,31 @@ import validators
 
 
 def scraped_results(url):
-    pass
-
-
-def get_citations_needed_count(url):
-
     if not validators.url(url):
         raise Exception("Not a valid URL, Try again")
+    else:
+        print("URL is valid")
 
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
     result = soup.find_all("a", text="citation needed")
-    citations_needed = len(result)
+
+    return result
+
+
+def get_citations_needed_count(scraped_results):
+
+    citations_needed = len(scraped_results)
+
     return citations_needed
+
+
+def get_citations_needed_report(scraped_results):
+
+    for citation in scraped_results:
+
+        text = citation.find_parent("p").text
+        print(text)
+
+
+# if __name__ == '__main__':

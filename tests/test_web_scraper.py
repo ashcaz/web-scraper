@@ -1,6 +1,10 @@
 import pytest
 import validators
-from web_scraper.web_scraper import get_citations_needed_count
+from web_scraper.web_scraper import (
+    get_citations_needed_count,
+    scraped_results,
+    get_citations_needed_report,
+)
 from web_scraper import __version__
 
 
@@ -9,16 +13,15 @@ def test_version():
 
 
 # @pytest.mark.skip("pending")
-def test_get_citations_bad_url():
+def test_scraped_results_bad_url():
     with pytest.raises(Exception) as err:
-        get_citations_needed_count("https://badurl")
+        scraped_results("https://badurl")
 
         assert str(err.value) == "Not a valid URL, Try again"
 
 
-def test_get_citations_good_url():
-    actual = get_citations_needed_count(
-        "https://en.wikipedia.org/wiki/History_of_Haiti"
-    )
-    expected = 3
-    assert actual == expected
+# @pytest.mark.skip("pending")
+def test_scraped_results_good_url(capsys):
+    scraped_results("https://en.wikipedia.org/wiki/History_of_Haiti")
+    captured = capsys.readouterr()
+    assert captured.out == "URL is valid\n"
